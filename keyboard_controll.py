@@ -9,6 +9,7 @@ kp = KeyboardControll()
 drone = tello.Tello()
 drone.connect()
 print(drone.get_battery())
+drone.streamon()
 
 def control_loop() -> Tuple[float, float, float, float]:
     lr, fb, ud, yv = 0, 0, 0, 0
