@@ -12,10 +12,12 @@ from __future__ import print_function
 import sys
 import pygame
 from pygame.locals import *
+from modules.control_module import Control
 
 
 class joystick_handler(object):
     def __init__(self, id):
+        self.control: Control = Control()
         self.id = id
         self.joy = pygame.joystick.Joystick(id)
         self.name = self.joy.get_name()
@@ -156,6 +158,19 @@ class input_test(object):
                 self.draw_joy(i)
             pygame.display.flip()
             # self.clock.tick(30)
+
+            for e in self.joy:
+                raxis = list(map(lambda x: round(x, 1), e.axis))
+                print(  f'L LR: {raxis[0]}', 
+                        f'L FB: {raxis[1] * -1}', 
+                        f'T: {raxis[2]}', 
+                        f'R FB: {raxis[3] * -1}', 
+                        f'R LR: {raxis[4]}', sep=' | ')
+                try:
+                    self.joy[0].control.set_speeds(raxis[0], raxis[1] * -1, raxis[2], raxis[4] * -1)
+                except:
+                    print('Error sending code')
+
             for event in [pygame.event.wait(), ] + pygame.event.get():
                 # QUIT             none
                 # ACTIVEEVENT      gain, state
